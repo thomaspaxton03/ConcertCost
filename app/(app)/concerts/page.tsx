@@ -1,5 +1,5 @@
-import { ConcertCards } from "@/components/concert-cards";
 import { EmptyState } from "@/components/empty-state";
+import { MyConcertsView } from "@/components/my-concerts-view";
 import { createClient } from "@/lib/supabase/server";
 import type { Concert } from "@/lib/types";
 
@@ -32,7 +32,7 @@ export default async function MyConcertsPage() {
       {concerts.length === 0 ? (
         <EmptyState message="No concerts logged yet. Add your first concert to start seeing your dashboard." />
       ) : (
-        <ConcertCards concerts={concerts} />
+        <MyConcertsView concerts={concerts} />
       )}
     </div>
   );
