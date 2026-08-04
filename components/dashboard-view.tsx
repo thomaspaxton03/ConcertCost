@@ -13,6 +13,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { AnnualBudgetSection } from "@/components/annual-budget-section";
+import { EmptyState } from "@/components/empty-state";
 import {
   COST_CATEGORIES,
   formatMoney,
@@ -20,7 +22,6 @@ import {
   withMetrics,
 } from "@/lib/concert-math";
 import type { Concert } from "@/lib/types";
-import { EmptyState } from "@/components/empty-state";
 
 const PIE_COLORS = [
   "#8884d8",
@@ -33,11 +34,34 @@ const PIE_COLORS = [
   "#ffa07a",
 ];
 
-export function DashboardView({ concerts }: { concerts: Concert[] }) {
-  if (concerts.length === 0) {
-    return <EmptyState />;
-  }
+export function DashboardView({
+  concerts,
+  userId,
+}: {
+  concerts: Concert[];
+  userId: string;
+}) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <p className="opacity-70 mt-1">
+          A quick look at your nights out and what they cost.
+        </p>
+      </div>
 
+      <AnnualBudgetSection userId={userId} concerts={concerts} />
+
+      {concerts.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <DashboardStatsAndCharts concerts={concerts} />
+      )}
+    </div>
+  );
+}
+
+function DashboardStatsAndCharts({ concerts }: { concerts: Concert[] }) {
   const enriched = concerts.map(withMetrics);
   const totalSpent = enriched.reduce((sum, c) => sum + c.total, 0);
   const avgCost = totalSpent / enriched.length;
@@ -81,14 +105,7 @@ export function DashboardView({ concerts }: { concerts: Concert[] }) {
   }));
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="opacity-70 mt-1">
-          A quick look at your nights out and what they cost.
-        </p>
-      </div>
-
+    <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard title="Total concerts" value={String(enriched.length)} />
         <StatCard title="Total spent" value={formatMoney(totalSpent)} />
@@ -190,7 +207,7 @@ export function DashboardView({ concerts }: { concerts: Concert[] }) {
           </ResponsiveContainer>
         </ChartCard>
       </div>
-    </div>
+    </>
   );
 }
 
