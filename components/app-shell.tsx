@@ -9,6 +9,7 @@ const NAV = [
   { href: "/", label: "Dashboard" },
   { href: "/add", label: "Add Concert" },
   { href: "/concerts", label: "My Concerts" },
+  { href: "/compare", label: "Compare" },
 ];
 
 export function AppShell({
